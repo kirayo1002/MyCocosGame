@@ -6,11 +6,14 @@ Scene* HelloWorld::createScene()
 {
     // 'scene' is an autorelease object
     auto scene = Scene::create();
-    
+
     // 'layer' is an autorelease object
+    auto bg = LayerGradient::create(Color4B(0,0,0,255), Color4B(0,0,0,2));
+    bg->setVector(Point(1, 0));
     auto layer = HelloWorld::create();
 
     // add layer as a child to scene
+    scene->addChild(bg);
     scene->addChild(layer);
 
     // return the scene
@@ -72,9 +75,37 @@ bool HelloWorld::init()
     // add the sprite as a child to this layer
     this->addChild(sprite, 0);
     
+    
+    
+    //タッチ処理関連
+    auto listener = EventListenerTouchOneByOne::create(); //シングルタッチ
+    listener -> setSwallowTouches(true);
+    //CCPoint location =pTouch->getLocation();
+    
+    //タッチ開始
+    listener->onTouchBegan = [](Touch* touch, Event* event){
+        log("こころ");
+        return true;
+    };
+    //タッチ中の処理
+    listener->onTouchMoved = [](Touch* touch, Event* event){
+        log("ぴょんぴょん");
+    };
+    listener->onTouchEnded = [](Touch* touch, Event* event){
+        log("するんじゃ〜");
+    };
+    listener->onTouchCancelled = [](Touch* touch, Event* event){
+        log("しないんじゃ〜");
+    };
+    this->getEventDispatcher()->addEventListenerWithSceneGraphPriority(listener, this);
+    
+    void addEventListenerWithFixedPriority(EventListener* listener, int fixedPriority);
+    
+    void addEventListenerWithSceneGraphPriority(EventListener* listener, Node* node);
+ 
     return true;
+    
 }
-
 
 void HelloWorld::menuCloseCallback(Ref* pSender)
 {
